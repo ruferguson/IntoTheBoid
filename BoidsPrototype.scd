@@ -39,8 +39,8 @@ f.value(\bass, 36);
 Synth("bass",[\freq, 80, \lpf, 200, \width, 0.75, \pan, 1]);
 Synth("chirp", [\freq, 440, \amp, 1, \dur, 0.1]);
 
-
-OSCdef(\listener,
+NetAddr.localAddr;
+OSCdef('imageListener',
 	{
 		|msg|
 		var bass, type, degree, volume, orientation, note;
@@ -49,6 +49,7 @@ OSCdef(\listener,
 		msg[2] = degree;
 		msg[3] = volume;
 		msg[4] = orientation;
+
 
 		/* Types:
 		 *   0: Bass note
@@ -66,19 +67,17 @@ OSCdef(\listener,
 		 *
 		*/
 
-		if (type == 0) {
+		if (type == 0, {
 
 			bass = degree;
 			Synth("bass",[\freq, degree.midicps, \amp, volume, \lpf, 200, \width, 0.75]);
 
-		}{
-
-
-
+		}, {
 			Synth("chirp", [\freq, 440, \amp, volume, \dur, 0.1, \pan, 1]);
 
 		}
+		)
 
 	},
-	'/bass'
+	"/listener"
 );
