@@ -10,6 +10,8 @@ float volume; // 0-1 volume, 0 is silent and 1 is loud
 float orientation; // -1 to 1 (we need to find a nice way to map
                    // orientation to this scale so I can plug it into pan)
 
+boolean atEdge;
+
 PWindow win;
 Flock flock;
 OscP5 osc;
@@ -40,29 +42,18 @@ void draw() {
   
   type = 0;
   degree = 32;
-  volume = 0.5;
+  volume = 0.25;
   orientation = 0;
-  /*
-  // send the data to SuperCollider
-    OscMessage msg = new OscMessage("/colorhit");
-    msg.add(type);
-    msg.add(degree);
-    msg.add(volume);
-    msg.add(orientation);
-    osc.send(msg, supercollider);*/
-    msg = new OscMessage("/listener"); // remember to change slash for SC to match
-    msg.add(type);
-    println(type);
-    msg.add(degree);
-    msg.add(volume);
-    msg.add(orientation);
-
+  
+  msg = new OscMessage("/listener"); // remember to change slash for SC to match
+  msg.add(type);
+  msg.add(degree);
+  msg.add(volume);
+  msg.add(orientation);
 }
 
 // Add a new boid into the System
 void mousePressed() {
   flock.addBoid(new Boid(mouseX,mouseY));
   println("mousePressed in primary window");
-
-  osc.send(msg, supercollider);
 }

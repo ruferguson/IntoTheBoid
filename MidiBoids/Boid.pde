@@ -9,7 +9,7 @@ class Boid {
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
 
-    Boid(float x, float y) {
+  Boid(float x, float y /*int bType, int bDegree, float bVolume, float bOrientation*/) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -23,6 +23,17 @@ class Boid {
     r = 2.0;
     maxspeed = 2;
     maxforce = 0.03;
+    
+    /* use these with MIDI controller input
+    type = bType;
+    degree = bDegree;
+    volume = bVolume;
+    orientation = bOrientation; */
+    
+    type = 0; // should be random between 0 or 1
+    degree = (int) random(30, 40);
+    volume = random(0, 0.5);
+    orientation = random(-1, 1);
   }
 
   void run(ArrayList<Boid> boids) {
@@ -101,10 +112,25 @@ class Boid {
 
   // Wraparound
   void borders() {
-    if (position.x < -r) position.x = width+r;
-    if (position.y < -r) position.y = height+r;
-    if (position.x > width+r) position.x = -r;
-    if (position.y > height+r) position.y = -r;
+    if (position.x < -r) {
+      position.x = width+r;
+      atEdge = true;
+    } else if (position.y < -r) {
+      position.y = height+r;
+      atEdge = true;
+    } else if (position.x > width+r) {
+      position.x = -r;
+      atEdge = true;
+    } else if (position.y > height+r) {
+      position.y = -r;
+      atEdge = true;
+    } else {
+      atEdge = false;
+    }
+    
+    if (atEdge) {
+        osc.send(msg, supercollider);
+    }
   }
 
   // Separation
@@ -198,4 +224,5 @@ class Boid {
       return new PVector(0, 0);
     }
   }
+
 }
