@@ -18,9 +18,9 @@ class Metronome {
   
   public void setBPM (float bpm) {
     
-    if (bpm > 0)//Reject invalid bpm
+    if (bpm > 0) { //Reject invalid bpm
       tempo = 60000 / bpm; //Convert bpm to elapsed time in ms.
-    
+    }
   }
   
   void update() {

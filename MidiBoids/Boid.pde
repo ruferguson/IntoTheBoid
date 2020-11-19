@@ -21,27 +21,22 @@ class Boid {
   public Boid(Metronome m, float x, float y, float pTime) {
     acceleration = new PVector(0, 0);
 
-    // This is a new PVector method not yet implemented in JS
-    // velocity = PVector.random2D();
-
-    // Leaving the code temporarily this way so that this example runs in JS
-    float angle = random(TWO_PI);
-    velocity = new PVector(cos(angle), sin(angle));
+    velocity = PVector.random2D();
 
     position = new PVector(x, y);
     r = 2.0;
     maxspeed = 2;
     maxforce = 0.03;
     
-   type = 0; // should be random between 0 or 1
-   degree = (int) random(30, 40);
-   volume = random(0, 0.5);
+    type = round(random(0, 1)); // should be random between 0 or 1
+    degree = (int) random(30, 40);
+    volume = random(0, 0.5);
    
-   timing = pTime;
+    timing = pTime;
    
-   println(timing);
+    println(timing);
    
-   metro = m;
+    metro = m;
   }
   
   public void setValues(int bType, int bDegree, float bVolume) {
@@ -58,7 +53,6 @@ class Boid {
   }
 
   void applyForce(PVector force) {
-    // We could add mass here if we want A = F / M
     acceleration.add(force);
   }
 
@@ -97,12 +91,7 @@ class Boid {
   PVector seek(PVector target) {
     PVector desired = PVector.sub(target, position);  // A vector pointing from the position to the target
     // Scale to maximum speed
-    desired.normalize();
-    desired.mult(maxspeed);
-
-    // Above two lines of code below could be condensed with new PVector setMag() method
-    // Not using this method until Processing.js catches up
-    // desired.setMag(maxspeed);
+    desired.setMag(maxspeed);
 
     // Steering = Desired minus Velocity
     PVector steer = PVector.sub(desired, velocity);
@@ -113,7 +102,6 @@ class Boid {
   void render() {
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading() + radians(90);
-    // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
     
     fill(200, 100);
     stroke(255);
@@ -178,13 +166,8 @@ class Boid {
 
     // As long as the vector is greater than 0
     if (steer.mag() > 0) {
-      // First two lines of code below could be condensed with new PVector setMag() method
-      // Not using this method until Processing.js catches up
-      // steer.setMag(maxspeed);
-
       // Implement Reynolds: Steering = Desired - Velocity
-      steer.normalize();
-      steer.mult(maxspeed);
+      steer.setMag(maxspeed);
       steer.sub(velocity);
       steer.limit(maxforce);
     }
@@ -206,13 +189,9 @@ class Boid {
     }
     if (count > 0) {
       sum.div((float)count);
-      // First two lines of code below could be condensed with new PVector setMag() method
-      // Not using this method until Processing.js catches up
-      // sum.setMag(maxspeed);
-
+      
       // Implement Reynolds: Steering = Desired - Velocity
-      sum.normalize();
-      sum.mult(maxspeed);
+      sum.setMag(maxspeed);
       PVector steer = PVector.sub(sum, velocity);
       steer.limit(maxforce);
       return steer;

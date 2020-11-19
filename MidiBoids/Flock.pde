@@ -21,8 +21,16 @@ class Flock {
     boids.removeAll(boids); //Function to remove every boid
   }
 
-  void removeLastBoid() {
-    boids.remove(boids.size() - 1); //Removes the most recently created boid
+  void removeRandBoid() {
+    if (boids.size() > 0) {
+      int index = (int) random(0, boids.size());
+      boids.remove(index); //Removes a random boid
+    }
+  }
+  
+  void setBoidValues(int bType, int bDegree, float bVolume) {
+    int index = (int) random(0, boids.size());
+    (boids.get(index)).setValues(bType, bDegree, bVolume);
   }
   
   void removeBoid() {
