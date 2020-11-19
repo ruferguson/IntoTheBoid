@@ -18,11 +18,15 @@ OscP5 osc;
 NetAddress supercollider; // where we want to send the messages
 OscMessage msg;
 
+Metronome metro = new Metronome(this);
+
 void settings() {
     size(640, 360);
 }
 
 void setup() {
+  frameRate(120);
+  
   win = new PWindow();
   
   osc = new OscP5(this, 12000); // any large number to fill the parameter because we are not receiving data from SuperCollider
@@ -31,29 +35,27 @@ void setup() {
     
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 150; i++) {
-    flock.addBoid(new Boid(width/2,height/2));
+  for (int i = 0; i < 10; i++) {
+    flock.addBoid(new Boid(metro, width/2,height/2, 0));
+  }
+  for (int i = 0; i < 2; i++) {
+    flock.addBoid(new Boid(metro, width/2,height/2, 250));
   }
 }
 
 void draw() {
   background(50);
   flock.run();
-  
-  type = 0;
-  degree = 32;
-  volume = 0.25;
-  orientation = 0;
-  
-  msg = new OscMessage("/listener"); // remember to change slash for SC to match
-  msg.add(type);
-  msg.add(degree);
-  msg.add(volume);
-  msg.add(orientation);
+  metro.update();
 }
 
 // Add a new boid into the System
 void mousePressed() {
-  flock.addBoid(new Boid(mouseX,mouseY));
+  flock.addBoid(new Boid(metro, mouseX,mouseY, 1.0));
   println("mousePressed in primary window");
+}
+
+void passOscMessage(OscMessage message) {
+  osc.send(message, supercollider);
+  println("Sent Message: " + message);
 }

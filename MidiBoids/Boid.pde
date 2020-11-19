@@ -8,8 +8,17 @@ class Boid {
   float r;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
+  
+  int type;
+  int degree;
+  float volume;
+  float orientation = 0;
+  
+  float timing = 500;
+  
+  Metronome metro;
 
-  Boid(float x, float y /*int bType, int bDegree, float bVolume, float bOrientation*/) {
+  public Boid(Metronome m, float x, float y, float pTime) {
     acceleration = new PVector(0, 0);
 
     // This is a new PVector method not yet implemented in JS
@@ -24,16 +33,21 @@ class Boid {
     maxspeed = 2;
     maxforce = 0.03;
     
-    /* use these with MIDI controller input
+   type = 0; // should be random between 0 or 1
+   degree = (int) random(30, 40);
+   volume = random(0, 0.5);
+   
+   timing = pTime;
+   
+   println(timing);
+   
+   metro = m;
+  }
+  
+  public void setValues(int bType, int bDegree, float bVolume) {
     type = bType;
     degree = bDegree;
     volume = bVolume;
-    orientation = bOrientation; */
-    
-    type = 0; // should be random between 0 or 1
-    degree = (int) random(30, 40);
-    volume = random(0, 0.5);
-    orientation = random(-1, 1);
   }
 
   void run(ArrayList<Boid> boids) {
@@ -69,6 +83,10 @@ class Boid {
     velocity.add(acceleration);
     // Limit speed
     velocity.limit(maxspeed);
+    
+    orientation = atan(velocity.y / velocity.x);
+    orientation /= (PI/2);
+    
     position.add(velocity);
     // Reset accelertion to 0 each cycle
     acceleration.mult(0);
@@ -94,7 +112,7 @@ class Boid {
 
   void render() {
     // Draw a triangle rotated in the direction of velocity
-    float theta = velocity.heading2D() + radians(90);
+    float theta = velocity.heading() + radians(90);
     // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
     
     fill(200, 100);
@@ -112,24 +130,25 @@ class Boid {
 
   // Wraparound
   void borders() {
-    if (position.x < -r) {
-      position.x = width+r;
-      atEdge = true;
-    } else if (position.y < -r) {
-      position.y = height+r;
-      atEdge = true;
-    } else if (position.x > width+r) {
-      position.x = -r;
-      atEdge = true;
-    } else if (position.y > height+r) {
-      position.y = -r;
-      atEdge = true;
-    } else {
-      atEdge = false;
+    if (!atEdge) {
+      if (position.x < -r) {
+        position.x = width+r;
+        atEdge = true;
+      } else if (position.y < -r) {
+        position.y = height+r;
+        atEdge = true;
+      } else if (position.x > width+r) {
+        position.x = -r;
+        atEdge = true;
+      } else if (position.y > height+r) {
+        position.y = -r;
+        atEdge = true;
+      }
     }
     
     if (atEdge) {
-        osc.send(msg, supercollider);
+        metro.queueBoid(this);
+        atEdge = false;
     }
   }
 
