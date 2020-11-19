@@ -50,6 +50,7 @@ OSCdef('imageListener',
 		msg[3] = volume;
 		msg[4] = orientation;
 
+		msg.postln;
 
 		/* Types:
 		 *   0: Bass note
