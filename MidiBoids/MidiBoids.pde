@@ -46,7 +46,7 @@ void setup() {
 }
 
 void draw() {
-  background(50);
+  background(0);
   flock.run();
   metro.update();
   checkMidiController();

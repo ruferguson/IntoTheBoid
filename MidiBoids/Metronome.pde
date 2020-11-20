@@ -48,7 +48,7 @@ class Metronome {
     msg.add(boid.volume);
     msg.add(boid.orientation);
     
-    msg.printData();
+    //msg.printData();
     
     //String s = "Size before: " + boids.size();
     

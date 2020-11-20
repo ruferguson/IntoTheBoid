@@ -43,12 +43,15 @@ NetAddr.localAddr;
 OSCdef('imageListener',
 	{
 		|msg|
-		var bass, type, degree, volume, orientation, note;
+		var bass, note;
+		//var bass, type, degree, volume, orientation, note;
+		// I commented the above out and changed how the variables were declared.
+		// Matched how it was done for temp sonification.
 
-		msg[1] = type;     //See key below
-		msg[2] = degree;
-		msg[3] = volume;
-		msg[4] = orientation;
+		var type = msg[1];     //See key below
+		var degree = msg[2];
+		var volume = msg[3];
+		var orientation = msg[4];
 
 		msg.postln;
 
