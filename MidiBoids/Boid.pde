@@ -24,7 +24,7 @@ class Boid {
     velocity = PVector.random2D();
 
     position = new PVector(x, y);
-    r = 2.0;
+    r = random(20, 25);
     maxspeed = 2;
     maxforce = 0.03;
     
@@ -64,7 +64,7 @@ class Boid {
     // Arbitrarily weight these forces
     sep.mult(1.5);
     ali.mult(1.0);
-    coh.mult(1.0);
+    coh.mult(0.2);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);
@@ -103,17 +103,21 @@ class Boid {
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading() + radians(90);
     
-    fill(200, 100);
-    stroke(255);
-    pushMatrix();
-    translate(position.x, position.y);
-    rotate(theta);
-    beginShape(TRIANGLES);
-    vertex(0, -r*2);
-    vertex(-r, r*2);
-    vertex(r, r*2);
-    endShape();
-    popMatrix();
+    if (type == 0) {
+      pushMatrix();
+      translate(position.x, position.y);
+      rotate(theta);
+      tint(255, 126);
+      image(bird, 0, 0, r, r);
+      popMatrix();
+    } else {
+      pushMatrix();
+      translate(position.x, position.y);
+      rotate(theta);
+      tint(255, 255);
+      image(bird, 0, 0, r, r);
+      popMatrix();
+    }
   }
 
   // Wraparound
@@ -133,7 +137,6 @@ class Boid {
         atEdge = true;
       }
     }
-    
     if (atEdge) {
         metro.queueBoid(this);
         atEdge = false;

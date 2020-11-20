@@ -9,6 +9,7 @@ int degree; // For bass, represents a midi note (~30-40 or so).
 float volume; // 0-1 volume, 0 is silent and 1 is loud
 float orientation; // -1 to 1 (we need to find a nice way to map
                    // orientation to this scale so I can plug it into pan)
+PImage bird;
 
 boolean isB1, isB2, isB3, isB4, isB5, isB6, isB7, isB8, isB9;
 boolean atEdge;
@@ -29,6 +30,9 @@ void setup() {
   surface.setLocation(0, 0);
   frameRate(120);
   
+  imageMode(CENTER);
+  bird = loadImage("bird.png");
+  
   mid = new MidiController();
   
   osc = new OscP5(this, 12000); // any large number to fill the parameter because we are not receiving data from SuperCollider
@@ -38,10 +42,10 @@ void setup() {
   flock = new Flock();
   // Add an initial set of boids into the system
   for (int i = 0; i < 100; i++) {
-    flock.addBoid(new Boid(metro, width/2,height/2, 0));
+    flock.addBoid(new Boid(metro, random(width), random(height), 0));
   }
   for (int i = 0; i < 2; i++) {
-    flock.addBoid(new Boid(metro, width/2,height/2, 250));
+    flock.addBoid(new Boid(metro, random(width), random(height), 250));
   }
 }
 

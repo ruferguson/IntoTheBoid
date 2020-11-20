@@ -29,8 +29,10 @@ class Flock {
   }
   
   void setBoidValues(int bType, int bDegree, float bVolume) {
-    int index = (int) random(0, boids.size());
-    (boids.get(index)).setValues(bType, bDegree, bVolume);
+    if (boids.size() > 0) {
+      int index = (int) random(0, boids.size());
+      (boids.get(index)).setValues(bType, bDegree, bVolume);
+    }
   }
   
   void removeBoid() {
