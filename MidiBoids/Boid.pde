@@ -24,7 +24,7 @@ class Boid {
     velocity = PVector.random2D();
 
     position = new PVector(x, y);
-    r = random(13, 18);
+    r = random(20, 25);
     maxspeed = 2;
     maxforce = 0.03;
     
@@ -64,7 +64,7 @@ class Boid {
     // Arbitrarily weight these forces
     sep.mult(1.5);
     ali.mult(1.0);
-    coh.mult(0.5);
+    coh.mult(0.2);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);

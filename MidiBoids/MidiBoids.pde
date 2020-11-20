@@ -41,11 +41,17 @@ void setup() {
     
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 100; i++) {
-    flock.addBoid(new Boid(metro, random(width), random(height), 0));
+  for (int i = 0; i < 4; i++) {
+    flock.createBassBoid(metro, 36, 0, random(1));
   }
   for (int i = 0; i < 2; i++) {
-    flock.addBoid(new Boid(metro, random(width), random(height), 250));
+    flock.createBassBoid(metro, 39, 0, random(1));
+  }
+  for (int i = 0; i < 8; i++) {
+    flock.createChirpBoid(metro, 0, random(1));
+  }
+  for (int i = 0; i < 4; i++) {
+    flock.createChirpBoid(metro, 150, random(1));
   }
 }
 
@@ -58,7 +64,7 @@ void draw() {
 
 // Add a new boid into the System
 void mousePressed() {
-  flock.addBoid(new Boid(metro, mouseX,mouseY, 1.0));
+  //flock.addBoid(new Boid(metro, mouseX,mouseY, 1.0));
   println("mousePressed in primary window");
 }
 
@@ -68,10 +74,12 @@ void passOscMessage(OscMessage message) {
 }
 
 void checkMidiController() {
-  if (isB1) { // change a random boid to chirp
-      flock.setBoidValues(1, (int) random(0, 15), random(0, 0.5));
-  } else if (isB2) { // change a random boid to bass
-      flock.setBoidValues(0, (int) random(30, 40), random(0, 0.5));
+  if (isB1) { //Create a C2
+      flock.createBassBoid(metro, 36, 0, random(1));
+      //flock.setBoidValues(1, (int) random(0, 15), random(0, 0.5));
+  } else if (isB2) { // Create an Eb2
+      flock.createBassBoid(metro, 39, 0, random(1));
+      //flock.setBoidValues(0, (int) random(30, 40), random(0, 0.5));
   } else if (isB3) {
     
   } else if (isB4) {
@@ -80,8 +88,8 @@ void checkMidiController() {
     
   } else if (isB6) {
     
-  } else if (isB7) { // add a new boid
-    flock.addBoid(new Boid(metro, width/2, height/2, 1.0));
+  } else if (isB7) { // Create a chirp
+    flock.createChirpBoid(metro, 0, random(1));
   } else if (isB8) { // destroy one random boid 
     flock.removeRandBoid();
   } else if (isB9) { // clear all boids

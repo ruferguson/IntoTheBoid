@@ -7,15 +7,27 @@ class Flock {
     boids = new ArrayList<Boid>(); // Initialize the ArrayList
   }
 
+  public void createBassBoid(Metronome m, int note, float timing, float velocity) {
+    Boid b = new Boid(m, random(width), random(height), timing);
+    b.setValues(0, note, velocity);
+    boids.add(b);
+  }
+
+  public void createChirpBoid(Metronome m, float timing, float velocity) {
+    Boid b = new Boid(m, random(width), random(height), timing);
+    b.setValues(1, (int)random(11), velocity);
+    boids.add(b);
+  }
+
   void run() {
     for (Boid b : boids) {
       b.run(boids);  // Passing the entire list of boids to each boid individually
     }
   }
 
-  void addBoid(Boid b) {
+  /*void addBoid(Boid b) {
     boids.add(b);
-  }
+  }*/
 
   void clearBoids() {
     boids.removeAll(boids); //Function to remove every boid
