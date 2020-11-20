@@ -12,6 +12,8 @@ class Metronome {
   
   ArrayList<Boid> boids = new ArrayList<Boid>(); //A list of boids that still need to send an OscMessage
   
+  float tolerance = 5f; //in ms
+  
   public Metronome(MidiBoids pass) {
    m = pass; 
   }
@@ -30,41 +32,98 @@ class Metronome {
     beatTime += deltaTime; //Update the beat time.
     
     for(int i = 0; i < boids.size(); i++) {
-      if (boids.get(i).timing >= beatTime || (deltaTime >= beatTime && boids.get(i).timing <= deltaTime)) {
+      //boids.get(i).timing <= beatTime || (deltaTime >= beatTime && boids.get(i).timing <= deltaTime)
+      if (abs(boids.get(i).timing - beatTime) <= tolerance || abs(boids.get(i).timing - (beatTime - tempo)) <= tolerance) {
+        println(boids.get(i).timing);
         sendMessage(boids.get(i)); //Run through each queued boid and see if it is time to run its message.
       }
     }
     
     if (beatTime > tempo)
-      beatTime = 0; //Reset the beatTime every beat.
+      onBeat(); //Reset the beatTime every beat.
+    
+  }
+  
+  void onBeat() {
+    
+    beatTime = 0;
+    formMessage(0, 24, 0.7, 0);
+    
+  }
+  
+  void formMessage(int type, int degree, float volume, float orientation) {
+    
+    msg = new OscMessage("/listener");
+    
+    msg.add(type);
+    msg.add(degree);
+    msg.add(volume);
+    msg.add(orientation);
+    
+    m.passOscMessage(msg);
     
   }
   
   void sendMessage(Boid boid) {
     
-    msg = new OscMessage("/listener");
-    msg.add(boid.type);
-    msg.add(boid.degree);
-    msg.add(boid.volume);
-    msg.add(boid.orientation);
-    
-    //msg.printData();
-    
-    //String s = "Size before: " + boids.size();
-    
+    formMessage(boid.type, boid.degree, boid.volume, boid.orientation);
     boids.remove(boid); //Remove the selected boid from the ArrayList.
     
-    //s += " Size after: " + boids.size();
-    //println(s);
-    
-    m.passOscMessage(msg);
   }
   
   void queueBoid(Boid boid) {
     if (!boids.contains(boid)) {
       boids.add(boid);
-      println("Boid of type " + boid.type + " and timing " + boid.timing + " queued for playback.");
+      //println("Boid of type " + boid.type + " and timing " + boid.timing + " queued for playback.");
     }
+  }
+  
+  void parseMidi(Flock f, int pitch, int velocity) {
+    
+    switch (pitch) {
+      
+      case 60:
+      f.clearBoids();
+      boids.removeAll(boids);
+      break;
+      
+      case 61:
+      f.removeLastBoid();
+      break;
+      
+      case 62:
+      break;
+      
+      case 63:
+      f.createChirpBoid(this, 0, beatTime, ((float)velocity / 100f));
+      formMessage(1, 5, (float)velocity / 100f, 0);
+      break;
+      
+      case 64:
+      f.createBassBoid(this, 36, beatTime, ((float)velocity / 127f));
+      formMessage(0, 36, (float)velocity / 127f, 0);
+      break;
+      
+      case 65:
+      f.createBassBoid(this, 39, beatTime, ((float)velocity / 127f));
+      formMessage(0, 39, (float)velocity / 127f, 0);
+      break;
+      
+      case 66:
+      f.createChirpBoid(this, 2, beatTime, ((float)velocity / 100f));
+      formMessage(1, 10, (float)velocity / 100f, 0);
+      break;
+      
+      case 67:
+      f.createBassBoid(this, 31, beatTime, ((float)velocity / 127f));
+      formMessage(0, 31, (float)velocity / 127f, 0);
+      break;
+      
+      case 68:
+      break;
+      
+    }
+    
   }
   
 }

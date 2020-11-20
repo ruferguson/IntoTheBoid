@@ -1,7 +1,7 @@
-
 // you must download the oscP5 library using Sketch > Import Library... > Add Library...
 import oscP5.*;
 import netP5.*;
+import themidibus.*;
 
 int type; // 0 is bass, 1 is chirp
 int degree; // For bass, represents a midi note (~30-40 or so).
@@ -14,11 +14,13 @@ PImage bird;
 boolean isB1, isB2, isB3, isB4, isB5, isB6, isB7, isB8, isB9;
 boolean atEdge;
 
-MidiController mid;
+MidiController mController;
 Flock flock;
 OscP5 osc;
 NetAddress supercollider; // where we want to send the messages
 OscMessage msg;
+
+MidiInterface mListener;
 
 Metronome metro = new Metronome(this);
 
@@ -33,26 +35,30 @@ void setup() {
   imageMode(CENTER);
   bird = loadImage("bird.png");
   
-  mid = new MidiController();
-  
   osc = new OscP5(this, 12000); // any large number to fill the parameter because we are not receiving data from SuperCollider
   // Run 'NetAddr.localAddr' in SuperCollider to determine the input for NetAddress(string, int)
   supercollider = new NetAddress("127.0.0.1", 57120); 
     
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 4; i++) {
+  /*for (int i = 0; i < 4; i++) {
     flock.createBassBoid(metro, 36, 0, random(1));
   }
   for (int i = 0; i < 2; i++) {
     flock.createBassBoid(metro, 39, 0, random(1));
   }
   for (int i = 0; i < 8; i++) {
-    flock.createChirpBoid(metro, 0, random(1));
+    flock.createChirpBoid(metro, 0, 0, random(1));
   }
   for (int i = 0; i < 4; i++) {
-    flock.createChirpBoid(metro, 150, random(1));
-  }
+    flock.createChirpBoid(metro, 0, 150, random(1));
+  }*/
+  
+  mController = new MidiController();
+  mListener = new MidiInterface(this, metro, flock, 0, 1);
+  
+  metro.setBPM(30);
+  
 }
 
 void draw() {
@@ -68,9 +74,11 @@ void mousePressed() {
   println("mousePressed in primary window");
 }
 
+int test = 0;
+
 void passOscMessage(OscMessage message) {
   osc.send(message, supercollider);
-  println("Sent Message: " + message);
+  println("Sent Message: " + (test++));
 }
 
 void checkMidiController() {
@@ -89,7 +97,7 @@ void checkMidiController() {
   } else if (isB6) {
     
   } else if (isB7) { // Create a chirp
-    flock.createChirpBoid(metro, 0, random(1));
+    flock.createChirpBoid(metro, 0, 0, random(1));
   } else if (isB8) { // destroy one random boid 
     flock.removeRandBoid();
   } else if (isB9) { // clear all boids

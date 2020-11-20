@@ -13,15 +13,16 @@ class Flock {
     boids.add(b);
   }
 
-  public void createChirpBoid(Metronome m, float timing, float velocity) {
+  public void createChirpBoid(Metronome m, int oct, float timing, float velocity) {
     Boid b = new Boid(m, random(width), random(height), timing);
-    b.setValues(1, (int)random(11), velocity);
+    b.setValues(1, (int)random(11 + oct*5), velocity);
     boids.add(b);
   }
 
   void run() {
-    for (Boid b : boids) {
-      b.run(boids);  // Passing the entire list of boids to each boid individually
+    for (int i = 0; i < boids.size(); i++) { //Had to change this to avoid a ConcurrentModificationException
+      if (boids.get(i) != null)
+        boids.get(i).run(boids);  // Passing the entire list of boids to each boid individually
     }
   }
 
@@ -47,9 +48,8 @@ class Flock {
     }
   }
   
-  void removeBoid() {
-    if (boids.size() > 0)
-      boids.remove(random(boids.size())); //Picks a random boid and removes it.
+  void removeLastBoid() {
+    boids.remove(boids.size() - 1);
   }
 
 }

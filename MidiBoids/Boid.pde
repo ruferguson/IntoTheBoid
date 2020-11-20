@@ -21,12 +21,12 @@ class Boid {
   public Boid(Metronome m, float x, float y, float pTime) {
     acceleration = new PVector(0, 0);
 
-    velocity = PVector.random2D();
-
     position = new PVector(x, y);
     r = random(20, 25);
     maxspeed = 2;
     maxforce = 0.03;
+    
+    velocity = PVector.random2D().mult(maxspeed * 0.7);
     
     type = round(random(0, 1)); // should be random between 0 or 1
     degree = (int) random(30, 40);
@@ -150,12 +150,14 @@ class Boid {
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     // For every boid in the system, check if it's too close
-    for (Boid other : boids) {
-      float d = PVector.dist(position, other.position);
+    for (int i = 0; i < boids.size(); i++) {
+      float d = 0;
+      if (boids.get(i) != null)
+        d = PVector.dist(position, boids.get(i).position);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < desiredseparation)) {
         // Calculate vector pointing away from neighbor
-        PVector diff = PVector.sub(position, other.position);
+        PVector diff = PVector.sub(position, boids.get(i).position);
         diff.normalize();
         diff.div(d);        // Weight by distance
         steer.add(diff);
@@ -183,10 +185,12 @@ class Boid {
     float neighbordist = 50;
     PVector sum = new PVector(0, 0);
     int count = 0;
-    for (Boid other : boids) {
-      float d = PVector.dist(position, other.position);
+    for (int i = 0; i < boids.size(); i++) {
+      float d = 0;
+      if (boids.get(i) != null)
+      d = PVector.dist(position, boids.get(i).position);
       if ((d > 0) && (d < neighbordist)) {
-        sum.add(other.velocity);
+        sum.add(boids.get(i).velocity);
         count++;
       }
     }
@@ -210,10 +214,12 @@ class Boid {
     float neighbordist = 50;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all positions
     int count = 0;
-    for (Boid other : boids) {
-      float d = PVector.dist(position, other.position);
+    for (int i = 0; i < boids.size(); i++) {
+      float d = 0;
+      if (boids.get(i) != null)
+      d = PVector.dist(position, boids.get(i).position);
       if ((d > 0) && (d < neighbordist)) {
-        sum.add(other.position); // Add position
+        sum.add(boids.get(i).position); // Add position
         count++;
       }
     }

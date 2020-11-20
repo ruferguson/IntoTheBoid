@@ -88,15 +88,19 @@ NetAddr.localAddr;
 			note = 60;
 			degree = (degree % 5);
 
+			if (bass == 31,{ //G1
+				note = [50,53,55,56,59].at(degree);
+			},{});
+
 			if (bass == 36,{ //C2
 				note = [48,51,53,55,58].at(degree);
-				//note = note + (octave * 12);
 			},{});
 
 			if (bass == 39,{ //Eb2
 				note = [50,51,55,56,58].at(degree);
-				//note = note + (octave * 12);
 			},{});
+
+			note = note + (octave * 12);
 			//note.postln;
 			note.postln;
 			Synth("chirp", [\freq, note.midicps, \amp, volume, \dur, 0.1, \pan, orientation]);
