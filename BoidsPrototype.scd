@@ -40,10 +40,10 @@ Synth("bass",[\freq, 80, \lpf, 200, \width, 0.75, \pan, 1]);
 Synth("chirp", [\freq, 440, \amp, 1, \dur, 0.1]);
 
 NetAddr.localAddr;
-OSCdef('imageListener',
+(OSCdef('imageListener',
 	{
 		|msg|
-		var bass, note;
+		var bass, note, octave;
 		//var bass, type, degree, volume, orientation, note;
 		// I commented the above out and changed how the variables were declared.
 		// Matched how it was done for temp sonification.
@@ -53,7 +53,13 @@ OSCdef('imageListener',
 		var volume = msg[3];
 		var orientation = msg[4];
 
-		msg.postln;
+		bass = 36;
+
+		octave = (degree / 5).floor;
+		//([octave, degree]).postln;
+
+
+		//msg.postln;
 
 		/* Types:
 		 *   0: Bass note
@@ -73,15 +79,32 @@ OSCdef('imageListener',
 
 		if (type == 0, {
 
+			bass = 36;
 			bass = degree;
-			Synth("bass",[\freq, degree.midicps, \amp, volume, \lpf, 200, \width, 0.75]);
+
+			Synth("bass",[\freq, degree.midicps, \amp, volume * 0.8, \lpf, 200, \width, 0.75, \pan, orientation]);
 
 		}, {
-			Synth("chirp", [\freq, 440, \amp, volume, \dur, 0.1, \pan, 1]);
+			note = 60;
+			degree = (degree % 5);
+
+			if (bass == 36,{ //C2
+				note = [48,51,53,55,58].at(degree);
+				//note = note + (octave * 12);
+			},{});
+
+			if (bass == 39,{ //Eb2
+				note = [50,51,55,56,58].at(degree);
+				//note = note + (octave * 12);
+			},{});
+			//note.postln;
+			note.postln;
+			Synth("chirp", [\freq, note.midicps, \amp, volume, \dur, 0.1, \pan, orientation]);
+			//note.midicps.postln;
 
 		}
 		)
 
 	},
 	"/listener"
-);
+);)
