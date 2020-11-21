@@ -25,6 +25,14 @@ SynthDef("chirp", { |out, freq, amp, dur, pan|
 		Line.ar(0.1, 0, dur, SinOsc.ar(freq, mul: 0.4, add: 0.6), 0, 2) * Pulse.ar(freq,mul: [1,0.8])
     )
 }).add;
+
+SynthDef("hihat", {arg out = 0, amp = 0.5, att = 0.01, rel = 0.2, ffreq = 6000, pan = 0;
+	var env, snd;
+	env = Env.perc(att, rel, amp).kr(doneAction: 2);
+	snd = WhiteNoise.ar;
+	snd = HPF.ar(in: snd, freq: ffreq, mul: env);
+	Out.ar(out, Pan2.ar(snd, pan));
+}).add;
 )
 
 var bass = 10;
@@ -38,9 +46,15 @@ f.value(\bass, 36);
 
 Synth("bass",[\freq, 80, \lpf, 200, \width, 0.75, \pan, 1]);
 Synth("chirp", [\freq, 440, \amp, 1, \dur, 0.1]);
+Synth("hihat", [\rel, 0.075]);
 
 NetAddr.localAddr;
-(OSCdef('imageListener',
+
+
+
+(
+b = 36;
+OSCdef('imageListener',
 	{
 		|msg|
 		var bass, note, octave;
@@ -52,8 +66,6 @@ NetAddr.localAddr;
 		var degree = msg[2];
 		var volume = msg[3];
 		var orientation = msg[4];
-
-		bass = 36;
 
 		octave = (degree / 5).floor;
 		//([octave, degree]).postln;
@@ -80,31 +92,43 @@ NetAddr.localAddr;
 		if (type == 0, {
 
 			bass = 36;
-			bass = degree;
+			b = degree;
+			bass.postln;
 
 			Synth("bass",[\freq, degree.midicps, \amp, volume * 0.8, \lpf, 200, \width, 0.75, \pan, orientation]);
 
 		}, {
-			note = 60;
-			degree = (degree % 5);
+			if (type == 1, {
+				note = 60;
+				degree = (degree % 5);
 
-			if (bass == 31,{ //G1
-				note = [50,53,55,56,59].at(degree);
-			},{});
+				if (b == 31,{ //G1
+					note = [50,53,55,56,59].at(degree);
+					"G1".postln;
+				},{});
 
-			if (bass == 36,{ //C2
-				note = [48,51,53,55,58].at(degree);
-			},{});
+				if (b == 34,{ //Bb1
+					note = [49,50,53,56,58].at(degree);
+					"Bb1".postln;
+				},{});
 
-			if (bass == 39,{ //Eb2
-				note = [50,51,55,56,58].at(degree);
-			},{});
+				if (b == 36,{ //C2
+					note = [48,51,53,55,58].at(degree);
+					"C2".postln;
+				},{});
 
-			note = note + (octave * 12);
-			//note.postln;
-			note.postln;
-			Synth("chirp", [\freq, note.midicps, \amp, volume, \dur, 0.1, \pan, orientation]);
-			//note.midicps.postln;
+				if (b == 39,{ //Eb2
+					note = [50,51,55,56,58].at(degree);
+					"Eb2".postln;
+				},{});
+
+				note = note + (octave * 12);
+				//note.postln;
+				Synth("chirp", [\freq, note.midicps, \amp, volume, \dur, 0.1, \pan, orientation]);
+				//note.midicps.postln;
+			},{
+				Synth("hihat", [\rel, 0.075, \amp, 0.5 * volume]);
+			})
 
 		}
 		)

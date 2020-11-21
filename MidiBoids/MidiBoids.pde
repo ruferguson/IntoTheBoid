@@ -25,7 +25,7 @@ MidiInterface mListener;
 Metronome metro = new Metronome(this);
 
 void settings() {
-    size(displayWidth, displayHeight/2);
+    size(displayWidth, displayHeight);
 }
 
 void setup() {
@@ -57,7 +57,7 @@ void setup() {
   mController = new MidiController();
   mListener = new MidiInterface(this, metro, flock, 0, 1);
   
-  metro.setBPM(30);
+  metro.setBPM(15);
   
 }
 

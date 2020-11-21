@@ -16,6 +16,11 @@ class Boid {
   
   float timing = 500;
   
+  float separation = 1.5;
+  float alignment = 1.0;
+  float cohesion = 0.1;
+  
+  
   Metronome metro;
 
   public Boid(Metronome m, float x, float y, float pTime) {
@@ -23,8 +28,8 @@ class Boid {
 
     position = new PVector(x, y);
     r = random(20, 25);
-    maxspeed = 2;
-    maxforce = 0.03;
+    maxspeed = 4;
+    maxforce = 0.06;
     
     velocity = PVector.random2D().mult(maxspeed * 0.7);
     
@@ -44,6 +49,13 @@ class Boid {
     degree = bDegree;
     volume = bVolume;
   }
+  
+  public void setBehavior (float s, float a, float c, float max) {
+    separation = s; 
+    alignment = a;
+    cohesion = c;
+    maxspeed = max;
+  }
 
   void run(ArrayList<Boid> boids) {
     flock(boids);
@@ -62,9 +74,9 @@ class Boid {
     PVector ali = align(boids);      // Alignment
     PVector coh = cohesion(boids);   // Cohesion
     // Arbitrarily weight these forces
-    sep.mult(1.5);
-    ali.mult(1.0);
-    coh.mult(0.2);
+    sep.mult(separation);
+    ali.mult(alignment);
+    coh.mult(cohesion);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);

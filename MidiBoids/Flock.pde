@@ -10,12 +10,14 @@ class Flock {
   public void createBassBoid(Metronome m, int note, float timing, float velocity) {
     Boid b = new Boid(m, random(width), random(height), timing);
     b.setValues(0, note, velocity);
+    b.setBehavior(5f, -5f, -5f, 1f); //Make bass boids anti-social.
     boids.add(b);
   }
 
   public void createChirpBoid(Metronome m, int oct, float timing, float velocity) {
     Boid b = new Boid(m, random(width), random(height), timing);
     b.setValues(1, (int)random(11 + oct*5), velocity);
+    b.setBehavior(2f, 1.3f, 1f, 3.6); //Make chirp boids very social.
     boids.add(b);
   }
 
