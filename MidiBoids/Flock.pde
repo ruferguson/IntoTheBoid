@@ -28,10 +28,6 @@ class Flock {
     }
   }
 
-  /*void addBoid(Boid b) {
-    boids.add(b);
-  }*/
-
   void clearBoids() {
     boids.removeAll(boids); //Function to remove every boid
   }
@@ -51,7 +47,9 @@ class Flock {
   }
   
   void removeLastBoid() {
-    boids.remove(boids.size() - 1);
+    if (boids.size() > 0) {
+      boids.remove(boids.size() - 1);
+    }
   }
 
 }

@@ -38,9 +38,7 @@ class Boid {
     volume = random(0, 0.5);
    
     timing = pTime;
-   
-    println(timing);
-   
+    
     metro = m;
   }
   

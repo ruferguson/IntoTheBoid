@@ -59,10 +59,8 @@ class Metronome {
   }
   
   void onBeat() {
-    
     beatTime = 0;
     formMessage(2, 24, 0.7, 0);
-    
   }
   
   void formMessage(int type, int degree, float volume, float orientation) {
@@ -98,7 +96,6 @@ class Metronome {
       chirpCount++;
     }
       boids.add(boid);
-      //println("Boid of type " + boid.type + " and timing " + boid.timing + " queued for playback.");
     }
   }
   
@@ -106,48 +103,49 @@ class Metronome {
     
     switch (pitch) {
       
-      case 60:
+      case 60: // clears all boids
       f.clearBoids();
       boids.removeAll(boids);
       break;
       
-      case 61:
+      case 61: // removes last boid
       f.removeLastBoid();
       break;
       
-      case 62:
+      case 62: // remove a random boid
+      f.removeRandBoid();
       break;
       
-      case 63:
+      case 63: // chirp lower octave
       f.createChirpBoid(this, 0, beatTime, ((float)velocity / 100f));
       formMessage(1, 5, (float)velocity / 100f, 0);
       break;
       
-      case 64:
+      case 64: // C2
       f.createBassBoid(this, 36, beatTime, ((float)velocity / 127f));
       formMessage(0, 36, (float)velocity / 127f, 0);
       break;
       
-      case 65:
+      case 65: // Eb2
       f.createBassBoid(this, 39, beatTime, ((float)velocity / 127f));
       formMessage(0, 39, (float)velocity / 127f, 0);
       break;
       
-      case 66:
+      case 66: // chirp higher octave
       f.createChirpBoid(this, 2, beatTime, ((float)velocity / 100f));
       formMessage(1, 10, (float)velocity / 100f, 0);
       break;
       
-      case 67:
+      case 67:  // G1
       f.createBassBoid(this, 31, beatTime, ((float)velocity / 127f));
       formMessage(0, 31, (float)velocity / 127f, 0);
       break;
       
-      case 68:
-      break;
-      
-    }
-    
+      case 68: // Bb1
+      f.createBassBoid(this, 34, beatTime, ((float)velocity / 127f));
+      formMessage(0, 34, (float)velocity / 127f, 0);
+      break;   
+    }  
   }
   
 }

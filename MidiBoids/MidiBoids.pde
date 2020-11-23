@@ -9,8 +9,8 @@ int degree; // For bass, represents a midi note (~30-40 or so).
 float volume; // 0-1 volume, 0 is silent and 1 is loud
 float orientation; // -1 to 1 (we need to find a nice way to map
                    // orientation to this scale so I can plug it into pan)
+                   
 PImage bird;
-
 boolean isB1, isB2, isB3, isB4, isB5, isB6, isB7, isB8, isB9;
 boolean atEdge;
 
@@ -21,11 +21,10 @@ NetAddress supercollider; // where we want to send the messages
 OscMessage msg;
 
 MidiInterface mListener;
-
 Metronome metro = new Metronome(this);
 
 void settings() {
-    size(displayWidth, displayHeight);
+    size(displayWidth, displayHeight / 2);
 }
 
 void setup() {
@@ -40,25 +39,11 @@ void setup() {
   supercollider = new NetAddress("127.0.0.1", 57120); 
     
   flock = new Flock();
-  // Add an initial set of boids into the system
-  /*for (int i = 0; i < 4; i++) {
-    flock.createBassBoid(metro, 36, 0, random(1));
-  }
-  for (int i = 0; i < 2; i++) {
-    flock.createBassBoid(metro, 39, 0, random(1));
-  }
-  for (int i = 0; i < 8; i++) {
-    flock.createChirpBoid(metro, 0, 0, random(1));
-  }
-  for (int i = 0; i < 4; i++) {
-    flock.createChirpBoid(metro, 0, 150, random(1));
-  }*/
   
   mController = new MidiController();
   mListener = new MidiInterface(this, metro, flock, 0, 1);
   
   metro.setBPM(15);
-  
 }
 
 void draw() {
@@ -68,39 +53,37 @@ void draw() {
   checkMidiController();
 }
 
-// Add a new boid into the System
-void mousePressed() {
-  //flock.addBoid(new Boid(metro, mouseX,mouseY, 1.0));
-  println("mousePressed in primary window");
-}
-
-int test = 0;
-
 void passOscMessage(OscMessage message) {
   osc.send(message, supercollider);
-  println("Sent Message: " + (test++));
 }
 
 void checkMidiController() {
-  if (isB1) { //Create a C2
-      flock.createBassBoid(metro, 36, 0, random(1));
-      //flock.setBoidValues(1, (int) random(0, 15), random(0, 0.5));
-  } else if (isB2) { // Create an Eb2
-      flock.createBassBoid(metro, 39, 0, random(1));
-      //flock.setBoidValues(0, (int) random(30, 40), random(0, 0.5));
-  } else if (isB3) {
-    
-  } else if (isB4) {
-    
-  } else if (isB5) {
-    
-  } else if (isB6) {
-    
-  } else if (isB7) { // Create a chirp
-    flock.createChirpBoid(metro, 0, 0, random(1));
-  } else if (isB8) { // destroy one random boid 
-    flock.removeRandBoid();
-  } else if (isB9) { // clear all boids
-    flock.clearBoids();
-  }
+    if (isB1) { // clear all boids
+        metro.parseMidi(flock, 60, 100);
+        isB1 = false;
+    } else if (isB2) { // remove last boid
+        metro.parseMidi(flock, 61, 100);
+        isB2 = false;
+    } else if (isB3) { // remove a random boid
+        metro.parseMidi(flock, 62, 100);
+        isB3 = false;
+    } else if (isB4) { // chirp lower octave
+        metro.parseMidi(flock, 63, 100);
+        isB4 = false;
+    } else if (isB5) { // C2
+        metro.parseMidi(flock, 64, 100);
+        isB5 = false;
+    } else if (isB6) { // Eb2
+        metro.parseMidi(flock, 65, 100);
+        isB6 = false;
+    } else if (isB7) { // chirp higher octave
+        metro.parseMidi(flock, 66, 100);
+        isB7 = false;
+    } else if (isB8) { // G1
+        metro.parseMidi(flock, 67, 100);  
+        isB8 = false;
+    } else if (isB9) { // Bb1
+        metro.parseMidi(flock, 68, 100);
+        isB9 = false;
+    }
 }

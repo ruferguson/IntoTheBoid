@@ -7,35 +7,30 @@ class MidiController extends PApplet {
   int buttonSize;
   boolean buttonOver; 
   color mouseColor;
-  
+  color pressedColor;
+    
   void settings() {
     size(400, 400);
   }
   
   void setup() {
-    surface.setLocation(displayWidth*8/20, displayHeight*11/20);
-    stroke(255, 70);
+    surface.setLocation(displayWidth*7/20, displayHeight*11/20);
     buttonSize = 120;
-    
+        
     background(0);
     makeButtons();
   }
 
   void draw() {
+    pressedColor = color(random(180, 200), random(100, 150), random(150, 200));
     mouseColor = get(mouseX, mouseY);
-    overConsole();
-  }
-
-  void mousePressed() {
-    println("mousePressed in secondary window");
-    if (buttonOver) {
-      checkOverButton();
+    if (!mousePressed) {
+      makeButtons();
     }
   }
   
   void mouseReleased() {
-    makeButtons();
-    isB1 = isB2 = isB3 = isB4 = isB5 = isB6 = isB7 = isB8 = isB9 = false;
+    checkOverButton();
   }
   
   void makeButtons() {
@@ -70,64 +65,56 @@ class MidiController extends PApplet {
     }
   }
   
-  void overConsole() {
-    if (mouseX > 20 && mouseX < 380 && mouseY > 20 && mouseY < 380) {
-      buttonOver = true; 
-    } else {
-      buttonOver = false;
-    }
-  }
-  
   void b1() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(20, 20, 120, 120);
     isB1 = true;
   }
   
   void b2() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(140, 20, 120, 120);
     isB2 = true;
   }
   
   void b3() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(260, 20, 120, 120);
     isB3 = true;
   }
   
   void b4() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(20, 140, 120, 120);
     isB4 = true;
   }
   
   void b5() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(140, 140, 120, 120);
     isB5 = true;
   }
     
   void b6() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(260, 140, 120, 120);
     isB6 = true;
   }
     
   void b7() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(20, 260, 120, 120);
     isB7 = true;
   }
     
   void b8() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(140, 260, 120, 120);
     isB8 = true;
   }
     
   void b9() {
-    fill(random(180, 200), random(100, 150), random(150, 200));
+    fill(pressedColor);
     rect(260, 260, 120, 120);
     isB9 = true;
   }
