@@ -1,4 +1,5 @@
 (
+// Place cursor in here and press ⌘ + enter (Mac) or ctrl + enter (Windows) to initialize the SynthDef
 SynthDef("bass",
 	{
 		arg freq = 440, decay = 0.1, amp = 1, len = 1.075, width = 0.5, lpf = 1000, hpf = 10, pan = 0;
@@ -35,6 +36,7 @@ SynthDef("hihat", {arg out = 0, amp = 0.5, att = 0.01, rel = 0.2, ffreq = 6000, 
 }).add;
 )
 
+
 var bass = 10;
 bass.postln;
 
@@ -48,30 +50,21 @@ Synth("bass",[\freq, 80, \lpf, 200, \width, 0.75, \pan, 1]);
 Synth("chirp", [\freq, 440, \amp, 1, \dur, 0.1]);
 Synth("hihat", [\rel, 0.075]);
 
-NetAddr.localAddr;
-
-
 
 (
+// Place cursor in here and press ⌘ + enter (Mac) or ctrl + enter (Windows) to initialize the OSCdef
 b = 36;
 OSCdef('imageListener',
 	{
 		|msg|
+		// See key below
 		var bass, note, octave;
-		//var bass, type, degree, volume, orientation, note;
-		// I commented the above out and changed how the variables were declared.
-		// Matched how it was done for temp sonification.
-
-		var type = msg[1];     //See key below
+		var type = msg[1];
 		var degree = msg[2];
 		var volume = msg[3];
 		var orientation = msg[4];
 
 		octave = (degree / 5).floor;
-		//([octave, degree]).postln;
-
-
-		//msg.postln;
 
 		/* Types:
 		 *   0: Bass note
@@ -85,7 +78,7 @@ OSCdef('imageListener',
 		 *   Amplitude between 0-1
 		 *
 		 * Orientation:
-		 *   I'm not sure yet lol. maybe -1 to 1
+		 *   -1 to 1
 		 *
 		*/
 
@@ -123,9 +116,7 @@ OSCdef('imageListener',
 				},{});
 
 				note = note + (octave * 12);
-				//note.postln;
 				Synth("chirp", [\freq, note.midicps, \amp, volume, \dur, 0.1, \pan, orientation]);
-				//note.midicps.postln;
 			},{
 				Synth("hihat", [\rel, 0.075, \amp, 0.5 * volume]);
 			})
@@ -136,3 +127,9 @@ OSCdef('imageListener',
 	},
 	"/listener"
 );)
+
+
+
+// Run this (⌘ + enter (Mac) or ctrl + enter (Windows)) to check the net address that is being used.
+// Net address will be printed in the console on the right.
+NetAddr.localAddr;

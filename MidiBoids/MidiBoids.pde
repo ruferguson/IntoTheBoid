@@ -1,4 +1,4 @@
-// you must download the oscP5 library using Sketch > Import Library... > Add Library...
+// you must download the oscP5, netP5, and themidibus libraries using Sketch > Import Library... > Add Library...
 import oscP5.*;
 import netP5.*;
 import themidibus.*;
@@ -29,20 +29,17 @@ void settings() {
 
 void setup() {
   surface.setLocation(0, 0);
-  frameRate(120);
   
+  // Run 'NetAddr.localAddr' in SuperCollider to determine the input for NetAddress(string, int)
+  supercollider = new NetAddress("127.0.0.1", 57121); 
+  
+  osc = new OscP5(this, 12000);
+  frameRate(120);
   imageMode(CENTER);
   bird = loadImage("bird.png");
-  
-  osc = new OscP5(this, 12000); // any large number to fill the parameter because we are not receiving data from SuperCollider
-  // Run 'NetAddr.localAddr' in SuperCollider to determine the input for NetAddress(string, int)
-  supercollider = new NetAddress("127.0.0.1", 57120); 
-    
   flock = new Flock();
-  
   mController = new MidiController();
   mListener = new MidiInterface(this, metro, flock, 0, 1);
-  
   metro.setBPM(15);
 }
 
