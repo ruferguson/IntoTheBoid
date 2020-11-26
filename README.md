@@ -1,10 +1,17 @@
 # Into the Boid
 
-by Ru Ferguson, Nikita Kulkarni, and Ayden Machajewski 
+a collaboration between Ru Ferguson, Nikita Kulkarni, and Ayden Machajewski 
 
-Note: all commits by @ruferguson were collaborations with @nikitakulkarni17
+Note: all commits by @ruferguson were completed with @nikitakulkarni17
 
 Video Demonstration: https://youtu.be/v2cxswKSgWA
+
+#### Artists' Statement
+This instrument, Into the Boid, generates sound in Supercollider using OSC data sent from a Boids flocking sketch in Processing. Additionally, the Boids’ behavior can be manipulated through user-interaction by either a physical or virtual MIDI controller. We designed and implemented the virtual MIDI controller so the project could be controlled directly from the device it was being run on, and we created two Processing windows so that the user can view both the virtual MIDI controller and the Boids flocking patterns simultaneously.
+
+Through this project, we wanted to illustrate and engage the anthropogenic relationship between humans and the natural environment. The Boids represent elements and patterns within the natural world, such as bird migration, while the MIDI system demonstrates how humans interrupt those organic cycles. Our team was drawn to the beauty of the flocking behavior in the original Boids program, which was developed by Craig Reynolds in 1986, and we knew we wanted to explore how that pattern could be sonified.
+
+On a conceptual level, the user-interaction illuminates the anthropogenic relationship between humans and the environment; however, this instrument is also intended for real-time performance use. For example, a musician may use this program to perform by playing various MIDI buttons to affect the sound produced by the flocking patterns. Further development and application could involve the use of motion capture data in lieu of the MIDI controller so that a dancer could affect the flocking and sounds produced by using gestures and movement. In addition to performative applications, this instrument also has potential as an installation in which the audience could manipulate the program on their own to explore and experience the outcomes of their actions.
 
 ### — Instructions —
 
